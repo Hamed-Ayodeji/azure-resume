@@ -25,4 +25,8 @@ resource "azurerm_cosmosdb_account" "cosmosdb" {
     location                  = var.backup_location
     failover_priority         = 1
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

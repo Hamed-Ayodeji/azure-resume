@@ -1,5 +1,5 @@
 prefix                      = "azure-resume"
 location                    = "eastus"
 backup_location             = "westus"
-cosmosdb_sql_container_name = "counter"
+cosmosdb_sql_container_name = "Counter"
 partition_key_path          = "/id"

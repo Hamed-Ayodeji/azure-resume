@@ -40,3 +40,23 @@ Create a Cosmos DB account, database, container, and items by applying the terra
 5. Test the function locally by running `func host start` in the terminal and navigating to `http://localhost:7071/api/ResumeVisitCounter` in your browser.
 
 After completing these steps, you'll have an Azure Function connected to a Cosmos DB database. You can now integrate this function with the Azure Resume project frontend to store frontend data in the database.
+
+### Connect the Azure Function to the Frontend
+
+1. Go to the `local.settings.json` file and add the following CORS settings:
+
+    ```json
+    {
+      "IsEncrypted": false,
+      "Values": {
+        "AzureWebJobsStorage": "",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "CosmosDBConnection": "<your-cosmos-db-connection-string>"
+      },
+      "Host": {
+        "CORS": "*"
+      }
+    }
+    ```
+
+2. In the [frontend](../../frontend) folder, update the `apiUrl` in the [main.js](../../frontend/main.js) file to point to your Azure Function URL.

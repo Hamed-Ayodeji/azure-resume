@@ -128,6 +128,8 @@ Azure Front Door is a global, scalable entry-point that uses the Microsoft globa
 
 To deploy a custom domain for the Azure Resume project using Azure Front Door and CDN Service, follow these steps:
 
+### For Azure Front Door
+
 1. Go to the Storage Account and select the correct storage account.
 2. Select the `Front Door and CDN` option.
 3. Select the Service type of `Azure Front Door`.
@@ -150,4 +152,36 @@ To deploy a custom domain for the Azure Resume project using Azure Front Door an
 17. Add a txt record to your domain registrar with the value provided in the `Front Door` profile to approve the domain validation.
 18. Once the domain is validated, add the custom domain to the Azure Function CORS settings.
 
-After completing these steps, you'll have a custom domain for the Azure Resume project using Azure Front Door and CDN Service. You can now access the website using the custom domain and view the frontend of the Azure Resume project.
+### For Azure CDN
+
+1. Navigate to your Azure Storage Account and select the desired account.
+2. From the left-hand menu, select `Networking > Front Door and CDN`.
+3. In the `Service type` dropdown, select `Azure CDN`.
+4. Click on `Create new CDN`.
+5. Provide a unique name for the `CDN profile name`.
+6. Provide a unique name for the `Endpoint name`.
+7. In the `Pricing tier` dropdown, select `Standard Microsoft`.
+8. Configure caching rules as per your requirements.
+9. Click `Create` to initiate the creation of the CDN profile.
+
+    Once the CDN profile is created:
+
+10. Navigate to the CDN profile and select the `Custom Domains` option from the left-hand menu.
+11. Enter your custom domain name and click `Add`.
+    **Note:** You need to add a CNAME record to your domain registrar pointing to the value provided in the `CDN` profile.
+12. Add the custom domain to the Azure Function CORS settings.
+
+    To enable HTTPS for your custom domain:
+
+13. On the endpoint page of the CDN profile, click on the custom domain name you added.
+14. Toggle the `Custom Domain HTTPS` option to `On`.
+15. For the HTTPS configuration, select the `CDN managed` option.
+16. Set `TLS 1.2` as the minimum TLS version.
+17. Click `Save` to apply the changes.
+    Enabling HTTPS for the custom domain involves four steps:
+    - Submitting request: Requesting a certificate
+    - Domain validation: Verifying domain ownership
+    - Certificate provisioning: Issuing the certificate
+    - Completion: Applying the certificate and enabling HTTPS
+
+After completing these steps, you'll have a custom domain for the Azure Resume project using Azure Front Door and CDN Service. You can now access the website using the custom domain and view the frontend of the Azure Resume project. For me i use the CDN service, because it is more cheaper and easier to setup.

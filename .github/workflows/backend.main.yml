@@ -1,0 +1,14 @@
+name: deploy-backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:

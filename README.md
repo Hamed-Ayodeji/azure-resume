@@ -56,107 +56,14 @@ Refer to the Azure Front Door and CDN documentation [here](./backend/api/README.
 
 ### Step 5: Building the CI/CD Pipeline
 
-#### What is CI/CD?
+#### Create the frontend Workflow
 
-Continuous Integration and Continuous Deployment (CI/CD) is a software development practice that automates the integration of code changes and the deployment of the application to the production environment. CI/CD pipelines automate the build, test, and deployment processes, ensuring the application is always in a deployable state.
+Refer to the GitHub Actions documentation [here](./.github/workflows/README.md)
 
-![CI/CD pipelines](.img/cicd.png)
+#### Implementing Unit Tests for Azure Functions with xUnit
 
-CI/CD pipelines are crucial for modern software development practices. They reduce the risk of human error, improve the speed of delivery, and increase the overall efficiency of the development process.
-
-In this project, we'll use GitHub Actions to build a CI/CD pipeline that automates the deployment of the Azure Functions and front-end web application to Azure.
-
-#### Authentication with Azure
-
-To deploy the Azure Functions and front-end web application to Azure using GitHub Actions, we need to authenticate with Azure. We'll use an OpenID Connect (OIDC) token, a JSON Web Token (JWT) that can authenticate with Azure and access Azure resources. The OIDC token is generated using a federated identity credential associated with a managed identity in Azure.
-
-We'll need a managed identity to authenticate with Azure. Follow these steps to create a managed identity:
-
-1. Navigate to the Azure portal.
-2. Search for "Managed Identities" in the search bar.
-3. Click on "Managed Identities" in the search results.
-4. Click on "Add" to create a new managed identity.
-5. Select a subscription, resource group, and name for the managed identity.
-6. Click on "Review + create" to create the managed identity.
-7. Once created, navigate to the "Identity" blade of the managed identity.
-
-Next, configure a federated identity credential for the managed identity:
-
-1. Navigate to the user-assigned managed identity created in the Azure portal.
-2. Under "Settings", click on "Federated credentials".
-3. Click on "Add federated credential" to add a new federated credential.
-4. In the "Federated credential scenario" dropdown, select "GitHub Actions deploying azure resources".
-5. Enter your GitHub organization name in the "Organization name" field.
-6. Enter your GitHub repository name in the "Repository name" field.
-7. For the "Entity type", select Environment, Branch, pull request, or tag and specify the value. The values must exactly match the configuration in the GitHub Actions workflow file. For example:
-
-    - Branch: for workflow triggered by a push to the main branch.
-
-        ```yml
-        on:
-          push:
-            branches:
-              - main
-          pull_request:
-            branches:
-              - main
-        ```
-
-        select "Branch" as the entity type and specify "main" as the value.
-
-    - Pull request: for workflow triggered by a pull request.
-
-        ```yml
-        on:
-          pull_request:
-            branches:
-              - main
-        ```
-
-        select "Pull request" as the entity type and specify "main" as the value.
-
-    - Tag: for workflow triggered by a tag.
-
-        ```yml
-        on:
-          push:
-            tags:
-              - v*
-        ```
-
-        select "Tag" as the entity type and specify "v*" as the value.
-
-    - Environment: for workflow triggered by a specific environment.
-
-        ```yml
-        on:
-          push:
-            branches:
-              - main
-        jobs:
-          deploy:
-            runs-on: ubuntu-latest
-            environment: production
-        ```
-
-        select "Environment" as the entity type and specify "production" as the value.
-
-8. Add a name for the federated credential.
-9. The Issuer, Audiences, and Subject identifier fields will be auto-populated based on the values you enter.
-10. Click "Add" to create the federated credential.
-
-Use the following values from your Microsoft Entra managed identity to configure the GitHub Actions workflow:
-
-- `AZURE_TENANT_ID`: The Azure AD tenant ID of your Azure subscription.
-- `AZURE_CLIENT_ID`: The client ID of the managed identity.
-- `AZURE_SUBSCRIPTION_ID`: The subscription ID of your Azure subscription.
-
-Finally, use the Azure Login GitHub Action to authenticate with Azure using the OIDC token. This action allows you to authenticate with Azure and access Azure resources in your GitHub Actions workflow.
-
-**Note**: In the Github workflow, set `permissions:` with `id-token: write` at the workflow level or job level, depending on whether the OIDC token is required for the entire workflow or a specific job.
-
-#### Create the Frontend Workflow
-
-#### Implement Unit Tests
+Refer to the unit testing documentation [here](./backend/tests/README.md)
 
 #### Create the Backend Workflow
+
+Refer to the GitHub Actions documentation [here](./.github/workflows/README.md)

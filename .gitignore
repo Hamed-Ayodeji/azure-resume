@@ -36,5 +36,5 @@ terraform.rc
 
 # ssh keys
 *.pem
-
+.env
 .fake

@@ -2,7 +2,7 @@
 
 ## Introduction to CI/CD
 
-Continuous Integration and Continuous Deployment (CI/CD) is a software development practice that automates the integration of code changes and the deployment of the application to the production environment. CI/CD pipelines automate the build, test, and deployment processes, ensuring the application is always in a deployable state.
+Continuous Integration and Continuous Deployment (CI/CD) are essential practices in modern software development. They automate the integration of code changes and the deployment of the application to the production environment. CI/CD pipelines automate the build, test, and deployment processes, ensuring the application is always in a deployable state.
 
 ![CI/CD pipelines](.img/cicd.png)
 
@@ -16,7 +16,7 @@ To deploy the Azure Functions and front-end web application to Azure using GitHu
 
 ### Creating a Managed Identity
 
-Follow these steps to create a managed identity:
+A managed identity is an identity in Microsoft Entra ID (formerly Azure Active Directory). It's automatically managed by Azure and provides a Microsoft Entra ID identity for the Azure resources. Follow these steps to create a managed identity:
 
 1. Navigate to the Azure portal.
 2. Search for "Managed Identities" in the search bar.
@@ -30,7 +30,7 @@ Assign a role to the managed identity to access the Azure resources required for
 
 ### Configuring a Federated Identity Credential
 
-Follow these steps to configure a federated identity credential for the managed identity:
+A federated identity credential is a type of identity that is trusted across multiple IT systems or organizations. Follow these steps to configure a federated identity credential for the managed identity:
 
 1. Navigate to the user-assigned managed identity created in the Azure portal.
 2. Under "Settings", click on "Federated credentials".
@@ -130,3 +130,27 @@ The workflow consists of a single job named `build` that runs on the latest Ubun
 5. Logout: The final step, `logout`, runs the `az logout` command to logout from Azure. The `if: always()` condition ensures that this step is always run, regardless of the success or failure of previous steps. This is important for security reasons, to ensure that the GitHub Actions runner is not left authenticated with Azure after the workflow run.
 
 ## Creating the Backend Workflow
+
+This GitHub Actions workflow is named `deploy-backend`. It's triggered on a `push` event to the `main` branch, specifically when changes are made in the `backend` directory.
+
+### Step-by-step breakdown of the workflow
+
+1. Environment Variables: The workflow sets several environment variables, including the name of the Azure Function App, the path to the Function App project, and the .NET version to use.
+
+2. Jobs: The workflow defines a single job, build-and-deploy, which runs on the latest Windows runner.
+
+3. Steps:
+
+    - Checkout GitHub Action: This step checks out your repository so your workflow can access its contents.
+
+    - Azure Login: This step logs into Azure using the Azure Login Action. It uses secrets to securely handle the client ID, tenant ID, and subscription ID.
+
+    - Setup DotNet Environment: This step sets up a .NET environment using the specified .NET version.
+
+    - Resolve Project Dependencies Using Dotnet: This step navigates to the Azure Function App project directory and builds the project using dotnet build.
+
+    - Run unit tests: This step navigates to the tests directory and runs the unit tests using dotnet test.
+
+    - Run Azure Functions Action: This step deploys the Azure Function App using the Azure Functions Action. It uses the name of the Azure Function App and the path to the built project.
+
+This workflow is designed to build and deploy a .NET-based Azure Function App. It ensures that the app is built and tested before it's deployed to Azure.

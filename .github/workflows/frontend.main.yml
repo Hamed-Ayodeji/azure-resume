@@ -28,7 +28,7 @@ jobs:
 
       - name: Edit file
         run: |
-          sed -i 's/hamburger/${{ secrets.API_KEY }}/g' frontend/main.js
+          sed -i 's#hamburger#${{ secrets.API_KEY }}#g' frontend/main.js
 
       - name: Upload to blob storage
         uses: azure/CLI@v1

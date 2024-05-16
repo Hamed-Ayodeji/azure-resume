@@ -1,5 +1,20 @@
 # Azure Resume Project: CI/CD Documentation
 
+Welcome to the CI/CD documentation for the Azure Resume Project. This documentation provides an overview of the CI/CD pipelines used to deploy the Azure Functions and front-end web application to Azure using GitHub Actions.
+
+## Table of Contents
+
+- [Introduction to CI/CD](#introduction-to-cicd)
+- [Authenticating with Azure](#authenticating-with-azure)
+  - [Creating a Managed Identity](#creating-a-managed-identity)
+  - [Configuring a Federated Identity Credential](#configuring-a-federated-identity-credential)
+- [Creating the Frontend Workflow](#creating-the-frontend-workflow)
+  - [Workflow Overview](#workflow-overview)
+  - [Workflow Steps](#workflow-steps)
+- [Creating the Backend Workflow](#creating-the-backend-workflow)
+  - [Step-by-step breakdown of the workflow](#step-by-step-breakdown-of-the-workflow)
+- [Conclusion](#conclusion)
+
 ## Introduction to CI/CD
 
 Continuous Integration and Continuous Deployment (CI/CD) are essential practices in modern software development. They automate the integration of code changes and the deployment of the application to the production environment. CI/CD pipelines automate the build, test, and deployment processes, ensuring the application is always in a deployable state.
@@ -123,11 +138,13 @@ The workflow consists of a single job named `build` that runs on the latest Ubun
 
 2. Azure Login: The `Azure Login` step uses the `Azure/login@v2.1.0` action to authenticate with Azure. It uses the `client-id`, `tenant-id`, and `subscription-id` stored in the repository's secrets to authenticate.
 
-3. Upload to Blob Storage: The `Upload to blob storage` step uses the `azure/CLI@v1` action to run Azure CLI commands. The inline script uploads the frontend files to Azure Blob Storage using the `az storage blob upload-batch` command. The `--account-name` is set to `azureresumestaticwebhost`, the `--auth-mode` is set to `key`, the destination directory `-d` is set to `$web` (the root directory for static websites in Azure Blob Storage), and the source directory `-s` is set to `frontend/`. The `--overwrite` flag is used to overwrite any existing blobs with the same name.
+3. **Edit file**: The `Edit file` step uses the `sed` command to replace the `hamburger` placeholder in the `frontend/main.js` file with the secret value that is stored in the repository's secrets `API_KEY`. This step is necessary to replace the placeholder with the actual value before deploying the frontend files. This is done to ensure that sensitive information is not exposed in the frontend code.
 
-4. Purge CDN Endpoint: The `Purge CDN endpoint` step also uses the `azure/CLI@v1` action to run Azure CLI commands. The inline script purges the CDN endpoint using the `az cdn endpoint purge` command. The `--content-paths` is set to `"/*"` to purge all paths, the `--profile-name` and `--name` are set to `"qurtanaazureresume"`, and the `--resource-group` is set to `"azure-resume-rg"`. Purging the CDN endpoint ensures that the latest version of the frontend files are served.
+4. Upload to Blob Storage: The `Upload to blob storage` step uses the `azure/CLI@v1` action to run Azure CLI commands. The inline script uploads the frontend files to Azure Blob Storage using the `az storage blob upload-batch` command. The `--account-name` is set to `azureresumestaticwebhost`, the `--auth-mode` is set to `key`, the destination directory `-d` is set to `$web` (the root directory for static websites in Azure Blob Storage), and the source directory `-s` is set to `frontend/`. The `--overwrite` flag is used to overwrite any existing blobs with the same name.
 
-5. Logout: The final step, `logout`, runs the `az logout` command to logout from Azure. The `if: always()` condition ensures that this step is always run, regardless of the success or failure of previous steps. This is important for security reasons, to ensure that the GitHub Actions runner is not left authenticated with Azure after the workflow run.
+5. Purge CDN Endpoint: The `Purge CDN endpoint` step also uses the `azure/CLI@v1` action to run Azure CLI commands. The inline script purges the CDN endpoint using the `az cdn endpoint purge` command. The `--content-paths` is set to `"/*"` to purge all paths, the `--profile-name` and `--name` are set to `"qurtanaazureresume"`, and the `--resource-group` is set to `"azure-resume-rg"`. Purging the CDN endpoint ensures that the latest version of the frontend files are served.
+
+6. Logout: The final step, `logout`, runs the `az logout` command to logout from Azure. The `if: always()` condition ensures that this step is always run, regardless of the success or failure of previous steps. This is important for security reasons, to ensure that the GitHub Actions runner is not left authenticated with Azure after the workflow run.
 
 ## Creating the Backend Workflow
 
@@ -154,3 +171,7 @@ This GitHub Actions workflow is named `deploy-backend`. It's triggered on a `pus
     - Run Azure Functions Action: This step deploys the Azure Function App using the Azure Functions Action. It uses the name of the Azure Function App and the path to the built project.
 
 This workflow is designed to build and deploy a .NET-based Azure Function App. It ensures that the app is built and tested before it's deployed to Azure.
+
+## Conclusion
+
+CI/CD pipelines are essential for automating the deployment process and ensuring that your application is always in a deployable state. By using GitHub Actions, you can create powerful workflows that build, test, and deploy your application to Azure. These workflows can be customized to fit your specific requirements and can help streamline your development process.
